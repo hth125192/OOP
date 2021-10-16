@@ -2,7 +2,7 @@ import java.util.Objects;
 
 public class Circle extends Shape {
     protected double radius;
-    protected Point center;
+    protected Point center = new Point(0, 0);
 
     public Circle() {
 

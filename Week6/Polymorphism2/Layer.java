@@ -4,26 +4,25 @@ import java.util.List;
 public class Layer {
     private List<Shape> shapes = new ArrayList<>();
 
+    /** addShape. */
     public void addShape(Shape shape) {
-        shapes.add(shape);
+        if (shape != null) {
+            shapes.add(shape);
+        }
     }
 
     /** getInfo. */
     public String getInfo() {
-        String s = "Layer of crazy shapes:\n";
-        for (int i = 0; i < shapes.size(); i++) {
-            s = s + shapes.get(i).toString() + "\n";
+        String s = "Layer of crazy shapes:";
+        for (Shape shape : shapes) {
+            s += "\n" + shape.toString();
         }
         return s;
     }
 
     /** removeCircles. */
     public void removeCircles() {
-        for (int i = shapes.size() - 1; i >= 0; i--) {
-            if (shapes.get(i) instanceof Circle) {
-                shapes.remove(i);
-            }
-        }
+        shapes.removeIf(shape -> shape instanceof Circle);
     }
 
     /** removeDuplicates. */

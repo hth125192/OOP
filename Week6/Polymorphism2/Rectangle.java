@@ -3,10 +3,10 @@ import java.util.Objects;
 public class Rectangle extends Shape {
     protected double width;
     protected double length;
-    protected Point topLeft;
+    protected Point topLeft = new Point(0, 0);
 
     public Rectangle() {
-
+        this.topLeft = new Point(0, 0);
     }
 
     public Rectangle(double width, double length) {
