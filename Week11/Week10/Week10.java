@@ -2,17 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Week10 {
-    private List<String> classList = new ArrayList<>();
-    private List<String> libraryNameList = new ArrayList<>();
-    private List<String> libraryPathList = new ArrayList<>();
+    private final List<String> classList = new ArrayList<>();
+    private final List<String> libraryNameList = new ArrayList<>();
+    private final List<String> libraryPathList = new ArrayList<>();
     private String packageName = null;
 
-    /**
-     * dinh dang lai File noi dung.
-     *
-     * @param lines la ten mang file.
-     * @return tra ve mang file da duoc dinh dang.
-     */
+    /** format lại nội dung file. */
     public String[] formatContent(String[] lines) {
         for (int i = 0; i < lines.length; i++) {
             lines[i] = lines[i].trim();
@@ -27,23 +22,19 @@ public class Week10 {
         return lines;
     }
 
-    /**
-     * Ham lay ten Package.
-     *
-     * @param lines la ten mang file.
-     */
+    /** lấy package. */
     public void getPackage(String[] lines) {
         classList.clear();
-        for (int i = 0; i < lines.length; i++) {
-            String[] line = lines[i].split(" ");
+        for (String s : lines) {
+            String[] line = s.split(" ");
             if (line[0].equals("package")) {
                 packageName = line[1].substring(0, line[1].length() - 1);
                 break;
             }
         }
 
-        for (int i = 0; i < lines.length; i++) {
-            String[] line = lines[i].split(" ");
+        for (String s : lines) {
+            String[] line = s.split(" ");
             if (line.length < 3) {
                 continue;
             }
@@ -59,16 +50,12 @@ public class Week10 {
         }
     }
 
-    /**
-     * Ham lay ten vaf dia chi phan khai bao.
-     *
-     * @param lines la ten mang file.
-     */
+    /** lấy path và tên thư viện. */
     public void getImportFiles(String[] lines) {
         libraryNameList.clear();
         libraryPathList.clear();
-        for (int i = 0; i < lines.length; i++) {
-            String[] line = lines[i].split(" ");
+        for (String s : lines) {
+            String[] line = s.split(" ");
             int pos = -1;
             if (line.length > 1 && line[0].equals("import")) {
                 pos = 1;
@@ -92,12 +79,7 @@ public class Week10 {
         }
     }
 
-    /**
-     * ham kiem tra tinh hop le cua cau khai bao.
-     *
-     * @param line la ten mang dong.
-     * @return tra ve vi tri chuoi co chua ten phuong thuc.
-     */
+    /** kiểm tra tính hợp lệ của câu lệnh khai báo. */
     private int checkValid(String[] line) {
         String tmp = line[line.length - 1];
         if (tmp.length() == 0 || tmp.charAt(tmp.length() - 1) == ';') {
@@ -125,12 +107,7 @@ public class Week10 {
         return (p < line.length ? p : -1);
     }
 
-    /**
-     * ham lay tham so tu phuong thuc.
-     *
-     * @param str la chuoi chua ten phuong thuc.
-     * @return tra ve chuoi cac tham so cua phuong thuc.
-     */
+    /** lấy tham số. */
     public String getParam(String str) {
         String tmp = "";
         String childTmp = null;
@@ -154,6 +131,7 @@ public class Week10 {
             for (String className : classList) {
                 if (className.equals(tmp)) {
                     rs = packageName + '.' + tmp;
+                    break;
                 }
             }
         }
@@ -170,23 +148,18 @@ public class Week10 {
             rs += "<" + childTmp + ">";
         }
 
-        String finalResult = "";
+        StringBuilder finalResult = new StringBuilder();
         for (int i = 0; i < rs.length(); i++) {
             if (rs.charAt(i) == '{') {
                 break;
             }
 
-            finalResult += rs.charAt(i);
+            finalResult.append(rs.charAt(i));
         }
-        return finalResult;
+        return finalResult.toString();
     }
 
-    /**
-     * ham lay ten phuong thuc.
-     *
-     * @param line la ten mang dong.
-     * @return tra ve ten cua phuong thuc.
-     */
+    /** lấy tên hàm. */
     private String getFunctionName(String line) {
         String rs = "";
         for (int i = 0; i < line.length(); i++) {
@@ -200,20 +173,15 @@ public class Week10 {
         return rs;
     }
 
-    /**
-     * ham lay tat ca cac phuong thuc tu chuong trinh.
-     *
-     * @param fileContent la chuong trinh duoc doc duoi dang chuoi.
-     * @return danh sach tat ca cac phuong thuc tu chuong trinh.
-     */
+    /** getAllFunctions. */
     public List<String> getAllFunctions(String fileContent) {
         List<String> results = new ArrayList<>();
         String[] lines = fileContent.split("\n");
         lines = formatContent(lines);
         getPackage(lines);
         getImportFiles(lines);
-        for (int i = 0; i < lines.length; i++) {
-            String[] line = lines[i].split(" ");
+        for (String s : lines) {
+            String[] line = s.split(" ");
             int pos = checkValid(line);
             if (pos != -1) {
                 String rs = getFunctionName(line[pos]);
